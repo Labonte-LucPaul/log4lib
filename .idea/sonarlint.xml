@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SonarLintProjectSettings">
+    <option name="additionalProperties">
+      <map>
+        <entry key="sonar.cfamily.compile-commands" value="$PROJECT_DIR$/cmake-build-debug/compile_command.json" />
+      </map>
+    </option>
+    <option name="bindingEnabled" value="true" />
+    <option name="projectKey" value="log4lib" />
+    <option name="serverId" value="local" />
+  </component>
+</project>

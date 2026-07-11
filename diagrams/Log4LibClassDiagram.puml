@@ -1,0 +1,74 @@
+@startuml
+title log4lib - src and libtest class diagram
+
+'skinparam classAttributeIconSize 0
+
+namespace lfl {
+  enum LogLevel {
+    DEBUG
+    INFO
+    WARNING
+    ERROR
+    CRITICAL
+    OFF
+  }
+
+  abstract class Log4LibBase {
+    +Log4LibBase()
+    +~Log4LibBase()
+    +log(level, message, location)
+    +getMinimalLogLevel()
+    +setMinimalLogLevel(minimalLogLevel)
+    +shouldLog(level)
+    #logImpl(level, message, location)
+    -minimalLogLevel_
+  }
+  struct log <<utility>> {
+    +debug(logger, format, location)
+    +info(logger, format, location)
+    +warning(logger, format, location)
+    +error(logger, format, location)
+    +critical(logger, format, location)
+  }
+
+note right of log
+Represents template functions
+in namespace lfl::log
+end note
+
+log -> Log4LibBase: uses logger
+log ..> LogLevel: uses
+Log4LibBase ..> LogLevel:uses
+}
+
+namespace mylib {
+  class FunctionalityInLib {
+    +FunctionalityInLib(logger)
+    +doWork()
+    -logger: lfl::Log4LibBase
+  }
+}
+
+namespace clientofmylib {
+  class MyLogger {
+    -logImpl(level, message, location) override
+  }
+  note right of MyLogger
+    Forward the library logs to your logger
+  end note
+}
+
+FunctionalityInLib --> log: log messages
+FunctionalityInLib --> Log4LibBase: instance of logger
+
+clientofmylib ..> mylib: import
+
+MyLogger --|> Log4LibBase
+
+'lfl::Log4LibBase --> lfl::LogLevel : uses
+'mylib::WorkerInLib o-- lfl::Log4LibBase : logger
+'mylib::WorkerInLib ..> lfl::log : calls
+'lfl::log ..> lfl::Log4LibBase : uses logger
+'lfl::log ..> lfl::LogLevel : uses
+
+@enduml

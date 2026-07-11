@@ -1,0 +1,6 @@
+projectKey=log4lib
+serverUrl=http://localhost:9001
+serverVersion=26.6.0.123539
+dashboardUrl=http://localhost:9001/dashboard?id=log4lib
+ceTaskId=d9906714-e13b-414a-887c-0d31ca4462f0
+ceTaskUrl=http://localhost:9001/api/ce/task?id=d9906714-e13b-414a-887c-0d31ca4462f0
