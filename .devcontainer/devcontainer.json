@@ -1,6 +1,9 @@
 {
   "name": "log4lib",
-  "image": "docker.io/cloudmeshswnetworks/dcbuilder:v1.0.0",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
   "runArgs": [
     "--name=log4lib"
   ],
@@ -8,6 +11,10 @@
     "jetbrains": {
       "backend": "IntelliJ",
       "settings": {
+        "com.intellij:app:HttpConfigurable.proxy_host": "",
+        "com.intellij:app:HttpConfigurable.proxy_exceptions": "",
+        "com.intellij:app:HttpConfigurable.pac_url": "",
+        "org.jetbrains.plugins.github:app:GithubSettings.clone_git_using_ssh": true,
         "com.intellij:app:BuiltInServerOptions.builtInServerPort": 59662,
         "com.intellij:app:HttpConfigurable.use_proxy_pac": true
       },
@@ -15,7 +22,6 @@
     }
   },
   "features": {
-    "ghcr.io/devcontainers/features/git": {}
   },
   "remoteUser": "ubuntu"
 }

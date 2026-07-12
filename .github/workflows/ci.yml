@@ -3,7 +3,7 @@ name: log4lib CI/CD
 on: [push, pull_request]
 
 jobs:
-  devcontainer-ci:
+  log4lib-ci:
     runs-on: ubuntu-latest
     permissions:
       contents: read
