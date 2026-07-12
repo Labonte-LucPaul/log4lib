@@ -2,7 +2,7 @@
 // For more customization options, see https://containers.dev/implementors/json_reference
 {
   name: "log4lib",
-  image: "cloudmeshswnetworks/dcbuilder:v1.0.0",
+  image: "docker.io/cloudmeshswnetworks/dcbuilder:v1.0.0",
   runArgs: [
     "--name=log4lib",
     "--network=sonar-bridge"
