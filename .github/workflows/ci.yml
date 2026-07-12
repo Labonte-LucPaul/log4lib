@@ -27,10 +27,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Run
+      - name: Set env vars
+        run: echo "BUILD_DIR=${GITHUB_WORKSPACE}/build" >> $GITHUB_ENV
+
+      - name: Build
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
           cacheFrom: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
           push: ${{ github.ref == 'refs/heads/main' && 'always' || 'never' }}
-          runCmd: ctest --test-dir ${BUILD_DIR} --extra-verbose
+          runCmd: cmake -DCMAKE_BUILD_TYPE=Release -B ${{ env.BUILD_DIR }} -S .
+
+      - name: Run unit tests
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
+          cacheFrom: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
+          push: ${{ github.ref == 'refs/heads/main' && 'always' || 'never' }}
+          runCmd: ctest --test-dir ${{ env.BUILD_DIR }} --extra-verbose
