@@ -2,7 +2,8 @@
   "name": "log4lib",
   "image": "docker.io/cloudmeshswnetworks/dcbuilder:v1.0.0",
   "runArgs": [
-    "--name=log4lib"
+    "--name=log4lib",
+    "--network=sonar-bridge"
   ],
   "customizations": {
     "jetbrains": {
