@@ -31,6 +31,7 @@
 /**
  * @file log4lib.hpp
  * @brief Wrapper header file for the Log4Lib library that provides specialized functions for logging with log levels.
+ * @{
  */
 
 namespace lfl {
@@ -130,4 +131,6 @@ struct log {
 };
 } // namespace lfl::log
 
+/// @}
+///
 #endif  // LOG4LIB_LOG_4_LIB_INTERNAL_HPP

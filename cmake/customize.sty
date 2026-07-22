@@ -1,0 +1,13 @@
+\RequirePackage{fancyhdr}
+\fancypagestyle{fancy}{
+  \fancyhf{} % Efface les en-têtes et pieds de page par défaut
+  \fancyhead[LE,RO]{\bfseries\leftmark} % Garde le nom du chapitre en haut
+  \fancyfoot[LE,RO]{\thepage} % Garde UNIQUEMENT le numéro de page en bas (sans texte Doxygen)
+}
+
+% Redéfinit le style 'plain' (utilisé sur les pages de début de chapitre)
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[LE,RO]{\thepage} % Garde uniquement le numéro de page
+  \renewcommand{\headrulewidth}{0pt}
+}

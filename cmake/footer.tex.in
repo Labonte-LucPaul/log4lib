@@ -1,0 +1,4 @@
+\fancyfoot[L]{Version: @PROJECT_VERSION@}
+\fancyfoot[C]{Author Luc Paul Labonté}
+\fancyfoot[R]{\thepage}
+\end{document}

@@ -9,7 +9,8 @@ It gives you or the client of your library the flexibility to choose the logging
 All that is required is a simple include and a few lines of code to start logging.
 
 # Architecture
-```plantuml
-@startuml{../diagrams/architecture.puml}
-@enduml
-```
+
+![Schéma d'architecture](diagrams/Log4LibClassDiagram-log4lib___src_and_libtest_class_diagram.png){html: width=100%, latex: width=\textwidth}
+
+
+
