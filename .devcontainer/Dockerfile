@@ -5,4 +5,8 @@ RUN apt-get update && apt-get install -y \
   doxygen \
   graphviz \
   plantuml \
+  texlive-fonts-recommended  \
+  texlive-latex-base  \
+  texlive-latex-extra \
+  texlive-latex-recommended  \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
