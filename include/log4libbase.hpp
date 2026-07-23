@@ -94,8 +94,7 @@ public:
    * @param message The message to log
    * @param location The line number and file that generated the log call
    */
-  void log(LogLevel level, const std::string_view& message,
-           std::source_location location = std::source_location::current());
+  void log(LogLevel level, const std::string_view& message, std::source_location location);
 
   /**
    * @brief Returns the minimal log level that is currently set.

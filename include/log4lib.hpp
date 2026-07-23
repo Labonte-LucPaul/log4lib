@@ -39,25 +39,39 @@ namespace lfl {
  * @struct log
  * @brief Wrapper class for the Log4Lib library that provides specialized functions for logging with log levels.
  */
-struct log final{
+struct log final {
   log() = delete;
   ~log() = default;
   log(log&) = delete;
   log(log&&) = delete;
+
+ private:
+  template <typename... Args>
+  struct LogMessageFormat {
+    const std::format_string<Args...> messageFormat;
+    const std::source_location location;
+
+    template <typename T>
+      requires std::convertible_to<T, std::format_string<Args...>>
+    constexpr LogMessageFormat(T&& s, const std::source_location l = std::source_location::current())
+      : messageFormat(std::forward<T>(s)), location(l) {
+    }
+  };
+
+ public:
   /**
    * @brief Implementation of the specialized debug log function. It will not log if the logger is nullptr or the minimal
    * log level is not DEBUG.
    * @param logger The logger to use
    * @param format The format string
    * @param args The arguments to format
-   * @param location The line number and file that generated the log call
    */
   template <typename... Args>
-  static constexpr void debug(const std::shared_ptr<Log4LibBase>& logger, std::format_string<Args...> format,
-                              Args... args,
-                              const std::source_location location = std::source_location::current()) {
+  static constexpr void debug(const std::shared_ptr<Log4LibBase>& logger,
+                              typename std::type_identity<LogMessageFormat<Args...>>::type format,
+                              Args&&... args) {
     if (logger != nullptr && logger->shouldLog(LogLevel::DEBUG)) {
-      logger->log(LogLevel::DEBUG, std::format(format, args...), location);
+      logger->log(LogLevel::DEBUG, std::format(format.messageFormat, std::forward<Args>(args)...), format.location);
     }
   }
 
@@ -67,14 +81,13 @@ struct log final{
    * @param logger The logger to use
    * @param format The format string
    * @param args The arguments to format
-   * @param location The line number and file that generated the log call
    */
   template <typename... Args>
-  static constexpr void info(const std::shared_ptr<Log4LibBase>& logger, std::format_string<Args...> format,
-                             Args... args,
-                             const std::source_location location = std::source_location::current()) {
+  static constexpr void info(const std::shared_ptr<Log4LibBase>& logger,
+                             typename std::type_identity<LogMessageFormat<Args...>>::type format,
+                             Args&&... args) {
     if (logger != nullptr && logger->shouldLog(LogLevel::INFO)) {
-      logger->log(LogLevel::INFO, std::format(format, args...), location);
+      logger->log(LogLevel::INFO, std::format(format.messageFormat, std::forward<Args>(args)...), format.location);
     }
   }
 
@@ -84,14 +97,13 @@ struct log final{
    * @param logger The logger to use
    * @param format The format string
    * @param args The arguments to format
-   * @param location The line number and file that generated the log call
    */
   template <typename... Args>
-  static constexpr void warning(const std::shared_ptr<Log4LibBase>& logger, std::format_string<Args...> format,
-                                Args... args,
-                                const std::source_location location = std::source_location::current()) {
+  static constexpr void warning(const std::shared_ptr<Log4LibBase>& logger,
+                                typename std::type_identity<LogMessageFormat<Args...>>::type format,
+                                Args&&... args) {
     if (logger != nullptr && logger->shouldLog(LogLevel::WARNING)) {
-      logger->log(LogLevel::WARNING, std::format(format, args...), location);
+      logger->log(LogLevel::WARNING, std::format(format.messageFormat, std::forward<Args>(args)...), format.location);
     }
   }
 
@@ -101,14 +113,13 @@ struct log final{
    * @param logger The logger to use
    * @param format The format string
    * @param args The arguments to format
-   * @param location The line number and file that generated the log call
    */
   template <typename... Args>
-  static constexpr void error(const std::shared_ptr<Log4LibBase>& logger, std::format_string<Args...> format,
-                              Args... args,
-                              const std::source_location location = std::source_location::current()) {
+  static constexpr void error(const std::shared_ptr<Log4LibBase>& logger,
+                              typename std::type_identity<LogMessageFormat<Args...>>::type format,
+                              Args&&... args) {
     if (logger != nullptr && logger->shouldLog(LogLevel::ERROR)) {
-      logger->log(LogLevel::ERROR, std::format(format, args...), location);
+      logger->log(LogLevel::ERROR, std::format(format.messageFormat, std::forward<Args>(args)...), format.location);
     }
   }
 
@@ -118,14 +129,13 @@ struct log final{
    * @param logger The logger to use
    * @param format The format string
    * @param args The arguments to format
-   * @param location The line number and file that generated the log call
    */
   template <typename... Args>
-  static constexpr void critical(const std::shared_ptr<Log4LibBase>& logger, std::format_string<Args...> format,
-                                 Args... args,
-                                 const std::source_location location = std::source_location::current()) {
+  static constexpr void critical(const std::shared_ptr<Log4LibBase>& logger,
+                                 typename std::type_identity<LogMessageFormat<Args...>>::type format,
+                                 Args&&... args) {
     if (logger != nullptr && logger->shouldLog(LogLevel::CRITICAL)) {
-      logger->log(LogLevel::CRITICAL, std::format(format, args...), location);
+      logger->log(LogLevel::CRITICAL, std::format(format.messageFormat, std::forward<Args>(args)...), format.location);
     }
   }
 };
