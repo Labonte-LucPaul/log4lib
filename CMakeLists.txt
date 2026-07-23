@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+option(LOG4LIB_ENABLE_THREAD_SANITIZER "Build log4lib tests with ThreadSanitizer" ON)
+
 include("./cmake/generatedoc.cmake")
 
 #prevent having GTest in the deb package
@@ -36,6 +38,7 @@ set(TEST
         ${SRC}
         tests/test_log4lib_base.cpp
         tests/test_log4lib.cpp
+        tests/test_log4lib_thread_safety.cpp
 )
 
 add_executable(${APP_TEST} ${SRC_APP} main.cpp)
@@ -45,6 +48,12 @@ include(GoogleTest)
 add_executable(${PROJECT_NAME}_test ${TEST})
 gtest_discover_tests(${PROJECT_NAME}_test)
 target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main GTest::gmock)
+
+if (LOG4LIB_ENABLE_THREAD_SANITIZER)
+        message(STATUS "Thread sanitizer enabled")
+        target_compile_options(${PROJECT_NAME}_test PRIVATE -fsanitize=thread -g -O1)
+        target_link_options(${PROJECT_NAME}_test PRIVATE -fsanitize=thread)
+endif ()
 
 add_library(${PROJECT_NAME} STATIC
         include/log4lib.hpp

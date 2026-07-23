@@ -39,7 +39,7 @@ namespace lfl {
  * @struct log
  * @brief Wrapper class for the Log4Lib library that provides specialized functions for logging with log levels.
  */
-struct log {
+struct log final{
   log() = delete;
   ~log() = default;
   log(log&) = delete;
@@ -132,5 +132,5 @@ struct log {
 } // namespace lfl::log
 
 /// @}
-///
+
 #endif  // LOG4LIB_LOG_4_LIB_INTERNAL_HPP

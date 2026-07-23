@@ -25,9 +25,10 @@
 #include <format>
 
 namespace lfl {
-void Log4LibBase::log(const LogLevel level, const std::string_view& message, const std::source_location location) {
+void Log4LibBase::log(const LogLevel level, const std::string_view& message,
+                      const std::source_location location) {
   logImpl(level, std::format("[{:%Y-%m-%dT%H:%M:%S}] {}", std::chrono::system_clock::now(), message), location);
 }
 
-void Log4LibBase::setMinimalLogLevel(const LogLevel minimalLogLevel) { minimalLogLevel_ = minimalLogLevel; }
+void Log4LibBase::setMinimalLogLevel(const LogLevel minimalLogLevel) { minimalLogLevel_.store(minimalLogLevel); }
 } // namespace lfl

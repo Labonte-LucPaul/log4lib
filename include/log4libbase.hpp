@@ -45,6 +45,7 @@
 #ifndef LOG4LIB_LOG_4_LIB_BASE_HPP
 #define LOG4LIB_LOG_4_LIB_BASE_HPP
 
+#include <atomic>
 #include <source_location>
 #include <string_view>
 
@@ -100,7 +101,7 @@ public:
    * @brief Returns the minimal log level that is currently set.
    * @return The minimal log level
    */
-  [[nodiscard]] inline LogLevel getMinimalLogLevel() const { return minimalLogLevel_; }
+  [[nodiscard]] inline LogLevel getMinimalLogLevel() const { return minimalLogLevel_.load(); }
 
   /**
    * @brief Sets the minimal log level that is currently set.
@@ -114,7 +115,8 @@ public:
    * @return True if the log level should be logged, false otherwise
    */
   [[nodiscard]] inline bool shouldLog(const LogLevel level) const {
-    return level >= minimalLogLevel_ && minimalLogLevel_ != LogLevel::OFF && level != LogLevel::OFF;
+    const auto minimalLogLevel = minimalLogLevel_.load();
+    return level >= minimalLogLevel && minimalLogLevel != LogLevel::OFF && level != LogLevel::OFF;
   }
 
 protected:
@@ -127,7 +129,7 @@ protected:
   virtual void logImpl(LogLevel level, const std::string_view& message, std::source_location location) = 0;
 
 private:
-  LogLevel minimalLogLevel_{LogLevel::OFF}; /// The minimal log level that is currently set.
+  std::atomic<LogLevel> minimalLogLevel_{LogLevel::OFF}; /// The minimal log level that is currently set.
 };
 } // namespace lfl
 
