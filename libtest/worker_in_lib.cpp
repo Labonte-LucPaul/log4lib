@@ -29,10 +29,10 @@ WorkerInLib::WorkerInLib(std::unique_ptr<lfl::Log4LibBase> logger) : logger(std:
 }
 
 void WorkerInLib::doWork() const {
-  lfl::log::debug(logger, "Logging as DEBUG", std::source_location::current());
-  lfl::log::info(logger, "Logging as INFO", std::source_location::current());
-  lfl::log::warning(logger, "Logging as WARNING", std::source_location::current());
-  lfl::log::error(logger, "Logging as ERROR", std::source_location::current());
-  lfl::log::critical(logger, "Logging as CRITICAL", std::source_location::current());
+  lfl::log::debug(logger, "Logging as DEBUG");
+  lfl::log::info(logger, "Logging as INFO");
+  lfl::log::warning(logger, "Logging as WARNING");
+  lfl::log::error(logger, "Logging as ERROR");
+  lfl::log::critical(logger, "Logging as CRITICAL");
 }
 }

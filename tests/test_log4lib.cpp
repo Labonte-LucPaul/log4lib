@@ -26,158 +26,172 @@
 #include "../include/log4lib.hpp"
 #include "../include/log4libbase.hpp"
 
-class Log4LibMock final : public lfl::Log4LibBase
-{
-public:
-    ~Log4LibMock() override = default;
+class Log4LibMock final : public lfl::Log4LibBase {
+ public:
+  ~Log4LibMock() override = default;
 
-    MOCK_METHOD(void, logImpl, (lfl::LogLevel level, const std::string_view& message, std::source_location location),
-        (override)
+  MOCK_METHOD(void, logImpl, (lfl::LogLevel level, const std::string_view& message, std::source_location location),
+              (override)
     );
 };
 
-TEST(Log4LibTest, validateLogDebugExpectOnlyDebugLevelToLog)
-{
-    auto logMock = std::make_shared<Log4LibMock>();
-    logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
+TEST(Log4LibTest, validateLogDebugExpectOnlyDebugLevelToLog) {
+  auto logMock = std::make_shared<Log4LibMock>();
+  logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
 
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::debug(logMock, "Hello world", std::source_location::current());
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::debug(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::debug(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::debug(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::debug(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::debug(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::debug(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::debug(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::debug(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::debug(logMock, "Hello world");
 }
 
-TEST(Log4LibTest, validateLogInfoExpectOnlyInfoLevelAndAbovePriorityToLog)
-{
-    auto logMock = std::make_shared<Log4LibMock>();
+TEST(Log4LibTest, validateLogInfoExpectOnlyInfoLevelAndAbovePriorityToLog) {
+  auto logMock = std::make_shared<Log4LibMock>();
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::info(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::info(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::info(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::info(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::info(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::info(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::info(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::info(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::info(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::info(logMock, "Hello world");
 }
 
-TEST(Log4LibTest, validateLogWarningExpectOnlyWarningLevelAndAbovePriorityToLog)
-{
-    auto logMock = std::make_shared<Log4LibMock>();
-    logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
+TEST(Log4LibTest, validateLogWarningExpectOnlyWarningLevelAndAbovePriorityToLog) {
+  auto logMock = std::make_shared<Log4LibMock>();
+  logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
 
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::warning(logMock, "Hello world", std::source_location::current());
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::warning(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::warning(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::warning(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::warning(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::warning(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::warning(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::warning(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::warning(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::warning(logMock, "Hello world");
 }
 
-TEST(Log4LibTest, validateLogErrorExpectOnlyErrorLevelAndAbovePriorityToLog)
-{
-    auto logMock = std::make_shared<Log4LibMock>();
+TEST(Log4LibTest, validateLogErrorExpectOnlyErrorLevelAndAbovePriorityToLog) {
+  auto logMock = std::make_shared<Log4LibMock>();
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::error(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::error(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::error(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::error(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::error(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::error(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::error(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::error(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::error(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::error(logMock, "Hello world");
 }
 
-TEST(Log4LibTest, validateLogCriticalExpectLogOnAllLevel)
-{
-    auto logMock = std::make_shared<Log4LibMock>();
+TEST(Log4LibTest, validateLogCriticalExpectLogOnAllLevel) {
+  auto logMock = std::make_shared<Log4LibMock>();
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::critical(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::critical(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::critical(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::INFO);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::critical(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::critical(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::WARNING);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::critical(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::critical(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::ERROR);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::critical(logMock, "Hello world");
 
-    logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
-    lfl::log::critical(logMock, "Hello world", std::source_location::current());
+  logMock->setMinimalLogLevel(lfl::LogLevel::CRITICAL);
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(1);
+  lfl::log::critical(logMock, "Hello world");
 }
 
-TEST(Log4LibTest, validateLogLevelOffExpectNoLog)
-{
-    auto logMock = std::make_shared<Log4LibMock>();
-    logMock->setMinimalLogLevel(lfl::LogLevel::OFF);
+TEST(Log4LibTest, validateLogLevelOffExpectNoLog) {
+  auto logMock = std::make_shared<Log4LibMock>();
+  logMock->setMinimalLogLevel(lfl::LogLevel::OFF);
 
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::debug(logMock, "Hello world", std::source_location::current());
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::debug(logMock, "Hello world");
 
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::info(logMock, "Hello world", std::source_location::current());
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::info(logMock, "Hello world");
 
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::warning(logMock, "Hello world", std::source_location::current());
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::warning(logMock, "Hello world");
 
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::error(logMock, "Hello world", std::source_location::current());
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::error(logMock, "Hello world");
 
-    EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
-    lfl::log::critical(logMock, "Hello world", std::source_location::current());
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world"), ::testing::_)).Times(0);
+  lfl::log::critical(logMock, "Hello world");
+}
+
+TEST(Log4LibTest, validateMessageFormatExpectToCompile) {
+  auto logMock = std::make_shared<Log4LibMock>();
+  logMock->setMinimalLogLevel(lfl::LogLevel::DEBUG);
+
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::DEBUG, ::testing::HasSubstr("Hello world 42"), ::testing::_)).Times(1);
+  lfl::log::debug(logMock, "Hello world {}", 42);
+
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::INFO, ::testing::HasSubstr("Hello world 42"), ::testing::_)).Times(1);
+  lfl::log::info(logMock, "Hello world {}", 42);
+
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::WARNING, ::testing::HasSubstr("Hello world 42"), ::testing::_)).Times(1);
+  lfl::log::warning(logMock, "Hello world {}", 42);
+
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::ERROR, ::testing::HasSubstr("Hello world 42"), ::testing::_)).Times(1);
+  lfl::log::error(logMock, "Hello world {}", 42);
+
+  EXPECT_CALL(*logMock, logImpl(lfl::LogLevel::CRITICAL, ::testing::HasSubstr("Hello world 42"), ::testing::_)).
+    Times(1);
+  lfl::log::critical(logMock, "Hello world {}", 42);
 }

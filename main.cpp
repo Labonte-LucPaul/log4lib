@@ -32,7 +32,7 @@ public:
   explicit Wrapper(lfl::LogLevel level) { setMinimalLogLevel(level); }
 
 private:
-  void logImpl(lfl::LogLevel level, const std::string_view& message, std::source_location location) const override {
+  void logImpl(lfl::LogLevel level, const std::string_view& message, std::source_location location) override {
     std::clog << "Logging: " << message << " at level " << static_cast<int>(level) << " from " << location.file_name()
       << ":" << location.line() << std::endl;
   }
@@ -54,7 +54,7 @@ public:
   }
 
 private:
-  void logImpl(lfl::LogLevel level, const std::string_view& message, std::source_location location) const override {
+  void logImpl(lfl::LogLevel level, const std::string_view& message, std::source_location location) override {
     if (level == lfl::LogLevel::DEBUG) {
       syslog(LOG_DEBUG, "%s", message.data());
     } else if (level == lfl::LogLevel::INFO) {
