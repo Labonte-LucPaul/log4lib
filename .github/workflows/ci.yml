@@ -50,8 +50,9 @@ jobs:
           cacheFrom: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
           push: ${{ github.ref == 'refs/heads/main' && 'always' || 'never' }}
           runCmd: |
-            cd test-cmake-fetch-content && rm -rf ./${BUILD_DIR}
-            cmake -DCMAKE_BUILD_TYPE=Release -B ${BUILD_DIR} -S .
-            cmake --build ${BUILD_DIR} --target log4libtestfetchcontent
-            ./${BUILD_DIR}/log4libtestfetchcontent
-            rm -rf ./${BUILD_DIR}
+            cd test-cmake-fetch-content
+            rm -rf ./build
+            cmake -DCMAKE_BUILD_TYPE=Release -B build -S .
+            cmake --build build --target log4libtestfetchcontent
+            ./build/log4libtestfetchcontent
+            rm -rf ./build
