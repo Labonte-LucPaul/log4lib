@@ -44,6 +44,8 @@ set(TEST
 add_executable(${APP_TEST} ${SRC_APP} main.cpp)
 
 add_library(${PROJECT_NAME} STATIC
+        include/log4lib/log4lib.hpp
+        include/log4lib/log4libbase.hpp
         ${SRC}
 )
 
