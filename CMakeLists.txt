@@ -7,8 +7,6 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-option(LOG4LIB_ENABLE_THREAD_SANITIZER "Build log4lib tests with ThreadSanitizer" ON)
-
 include("./cmake/generatedoc.cmake")
 
 #prevent having GTest in the deb package
@@ -43,24 +41,26 @@ set(TEST
 
 add_executable(${APP_TEST} ${SRC_APP} main.cpp)
 
-enable_testing()
-include(GoogleTest)
-add_executable(${PROJECT_NAME}_test ${TEST})
-gtest_discover_tests(${PROJECT_NAME}_test)
-target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main GTest::gmock)
-
-if (LOG4LIB_ENABLE_THREAD_SANITIZER)
-        message(STATUS "Thread sanitizer enabled")
-        target_compile_options(${PROJECT_NAME}_test PRIVATE -fsanitize=thread -g -O1)
-        target_link_options(${PROJECT_NAME}_test PRIVATE -fsanitize=thread)
-endif ()
-
 add_library(${PROJECT_NAME} STATIC
-        include/log4lib.hpp
-        include/log4libbase.hpp
+        ${SRC}
 )
+
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
-include("./cmake/generate_deb.cmake")
+
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    enable_testing()
+    include(GoogleTest)
+    add_executable(${PROJECT_NAME}_test ${TEST})
+    gtest_discover_tests(${PROJECT_NAME}_test)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main GTest::gmock)
+    target_compile_options(${PROJECT_NAME}_test PRIVATE -fsanitize=thread -g -O1)
+    target_link_options(${PROJECT_NAME}_test PRIVATE -fsanitize=thread)
+    include("./cmake/generate_deb.cmake")
+else()
+    add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+endif()
