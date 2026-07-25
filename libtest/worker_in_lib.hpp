@@ -23,8 +23,10 @@
 #ifndef LOG4LIB_WORKER_IN_LIB_HPP
 #define LOG4LIB_WORKER_IN_LIB_HPP
 
-#include "../include/log4lib.hpp"
 #include <memory>
+
+#include "log4lib/log4lib.hpp"
+#include "log4lib/log4libbase.hpp"
 
 namespace mylib {
 class WorkerInLib {

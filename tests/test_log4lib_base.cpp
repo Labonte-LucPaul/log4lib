@@ -23,7 +23,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <source_location>
-#include "../include/log4libbase.hpp"
+#include "log4lib/log4libbase.hpp"
 
 class Log4LibMock final : public lfl::Log4LibBase
 {

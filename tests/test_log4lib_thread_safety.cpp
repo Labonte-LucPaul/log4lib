@@ -32,7 +32,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../include/log4lib.hpp"
+#include "log4lib/log4lib.hpp"
 
 namespace {
 class ThreadSafeCountingLogger final : public lfl::Log4LibBase
