@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.2)
-project(log4lib VERSION 1.0.0)
+project(log4lib VERSION 1.0.0 LANGUAGES CXX)
 
 set(APP_TEST "${PROJECT_NAME}App")
 
@@ -9,16 +9,18 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 include("./cmake/generatedoc.cmake")
 
-#prevent having GTest in the deb package
-set(INSTALL_GTEST OFF CACHE INTERNAL "")
-set(INSTALL_GMOCK OFF CACHE INTERNAL "")
-include(FetchContent)
-FetchContent_Declare(
-        gtest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG v1.17.0
-)
-FetchContent_MakeAvailable(gtest)
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    #prevent having GTest in the deb package
+    set(INSTALL_GTEST OFF CACHE INTERNAL "")
+    set(INSTALL_GMOCK OFF CACHE INTERNAL "")
+    include(FetchContent)
+    FetchContent_Declare(
+            gtest
+            GIT_REPOSITORY https://github.com/google/googletest.git
+            GIT_TAG v1.17.0
+    )
+    FetchContent_MakeAvailable(gtest)
+endif()
 
 include_directories(./include)
 
