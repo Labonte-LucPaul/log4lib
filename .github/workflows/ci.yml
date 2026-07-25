@@ -49,4 +49,4 @@ jobs:
           imageName: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
           cacheFrom: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
           push: ${{ github.ref == 'refs/heads/main' && 'always' || 'never' }}
-          runCmd: pwd
+          runCmd: make test-fetch-content
