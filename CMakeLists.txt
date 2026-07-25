@@ -44,13 +44,15 @@ set(TEST
 add_executable(${APP_TEST} ${SRC_APP} main.cpp)
 
 add_library(${PROJECT_NAME} STATIC
-        include/log4lib.hpp
-        include/log4libbase.hpp
+        ${SRC}
 )
+
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     enable_testing()
@@ -62,5 +64,5 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     target_link_options(${PROJECT_NAME}_test PRIVATE -fsanitize=thread)
     include("./cmake/generate_deb.cmake")
 else()
-    add_library(${PROJECT_NAME}:${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+    add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 endif()

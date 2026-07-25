@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "../include/log4libbase.hpp"
+#include "log4lib/log4libbase.hpp"
 #include <chrono>
 #include <format>
 

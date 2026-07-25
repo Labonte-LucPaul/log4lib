@@ -22,7 +22,7 @@
 
 #include <syslog.h>
 #include <iostream>
-#include "include/log4libbase.hpp"
+#include "log4lib/log4libbase.hpp"
 #include "libtest/worker_in_lib.hpp"
 
 namespace myclient {
