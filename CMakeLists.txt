@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.2)
-project(log4lib VERSION 1.0.0 LANGUAGES CXX)
+project(log4lib VERSION 1.0.1 LANGUAGES CXX)
 
 set(APP_TEST "${PROJECT_NAME}App")
 
