@@ -42,3 +42,17 @@ jobs:
           cacheFrom: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
           push: ${{ github.ref == 'refs/heads/main' && 'always' || 'never' }}
           runCmd: ctest --test-dir build --extra-verbose
+
+      - name: Test fetch content
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
+          cacheFrom: ghcr.io/${{ env.REPO_LOWER }}/devcontainer
+          push: ${{ github.ref == 'refs/heads/main' && 'always' || 'never' }}
+          runCmd: |
+            cd test-cmake-fetch-content
+            rm -rf ./build
+            cmake -DCMAKE_BUILD_TYPE=Release -B build -S .
+            cmake --build build --target log4libtestfetchcontent
+            ./build/log4libtestfetchcontent
+            rm -rf ./build
