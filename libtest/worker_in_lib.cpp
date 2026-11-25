@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include "worker_in_lib.hpp"
+#include "log4lib/log4lib.hpp"
 
 #include <utility>
 
@@ -29,6 +30,17 @@ WorkerInLib::WorkerInLib(std::unique_ptr<lfl::Log4LibBase> logger) : logger(std:
 }
 
 void WorkerInLib::doWork() const {
+  lfl::log::debug(logger, "Logging as DEBUG");
+  lfl::log::info(logger, "Logging as INFO");
+  lfl::log::warning(logger, "Logging as WARNING");
+  lfl::log::error(logger, "Logging as ERROR");
+  lfl::log::critical(logger, "Logging as CRITICAL");
+}
+
+WorkerInLibScope::WorkerInLibScope() : logger(lfl::Logger::get("ScopeWrapper")){
+}
+
+void WorkerInLibScope::doWork() const {
   lfl::log::debug(logger, "Logging as DEBUG");
   lfl::log::info(logger, "Logging as INFO");
   lfl::log::warning(logger, "Logging as WARNING");

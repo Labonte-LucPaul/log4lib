@@ -37,5 +37,14 @@ public:
 private:
   const std::shared_ptr<lfl::Log4LibBase> logger{nullptr};
 };
+
+class WorkerInLibScope {
+public:
+  explicit WorkerInLibScope();
+  void doWork() const;
+
+private:
+  const std::shared_ptr<lfl::Log4LibBase> logger{nullptr};
+};
 } // mylib
 #endif  // LOG4LIB_WORKER_IN_LIB_HPP

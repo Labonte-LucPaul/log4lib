@@ -25,6 +25,7 @@
 
 #include <atomic>
 #include <source_location>
+#include <string>
 #include <string_view>
 
 /**
@@ -46,6 +47,8 @@ enum class LogLevel : unsigned int {
   OFF       /// Disabled logging
 };
 
+constexpr std::string logLevelToString(LogLevel level);
+
 /**
  * @class Log4LibBase
  * @brief The base class used by your library client to inherit from
@@ -59,6 +62,12 @@ public:
    * @brief Default constructor
    */
   Log4LibBase() = default;
+
+  /**
+   * @brief Constructor to set the name of the log scope.
+   * @param scope The name of the log scope.
+   */
+  explicit Log4LibBase(const std::string&  scope);
 
   /**
    * @brief Default destructor
@@ -96,6 +105,8 @@ public:
     return level >= minimalLogLevel && minimalLogLevel != LogLevel::OFF && level != LogLevel::OFF;
   }
 
+  [[nodiscard]] inline const std::string& getScope() const { return scope_; }
+
 protected:
   /**
    * @brief Implementation of the log function.
@@ -107,6 +118,8 @@ protected:
 
 private:
   std::atomic<LogLevel> minimalLogLevel_{LogLevel::OFF}; /// The minimal log level that is currently set.
+  const std::string scope_;
+  const std::string scope_formatted;
 };
 } // namespace lfl
 

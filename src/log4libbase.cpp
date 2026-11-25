@@ -23,11 +23,26 @@
 #include "log4lib/log4libbase.hpp"
 #include <chrono>
 #include <format>
+#include <utility>
+
+namespace {
+constexpr std::array<std::string, 6> logLevelString = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "OFF"};
+}
 
 namespace lfl {
+constexpr std::string logLevelToString(LogLevel level) {
+  return logLevelString[static_cast<std::size_t>(level)];
+}
+
+Log4LibBase::Log4LibBase(const std::string& scope) : scope_(scope), scope_formatted(
+                                                       scope.empty() ? "" : std::format("[{}] ", scope_)) {
+}
+
 void Log4LibBase::log(const LogLevel level, const std::string_view& message,
                       const std::source_location location) {
-  logImpl(level, std::format("[{:%Y-%m-%dT%H:%M:%S}] {}", std::chrono::system_clock::now(), message), location);
+  logImpl(level, std::format("[{:%Y-%m-%dT%H:%M:%S}] {}[{}] {}", std::chrono::system_clock::now(), scope_formatted,
+                             logLevelToString(level),
+                             message), location);
 }
 
 void Log4LibBase::setMinimalLogLevel(const LogLevel minimalLogLevel) { minimalLogLevel_.store(minimalLogLevel); }

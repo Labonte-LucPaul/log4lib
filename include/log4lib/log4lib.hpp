@@ -45,8 +45,12 @@
 #ifndef LOG4LIB_LOG_4_LIB_INTERNAL_HPP
 #define LOG4LIB_LOG_4_LIB_INTERNAL_HPP
 #include <format>
+#include <map>
 #include <memory>
+#include <mutex>
+#include <shared_mutex>
 #include <source_location>
+#include <utility>
 
 #include "log4lib/log4libbase.hpp"
 
@@ -67,7 +71,7 @@ struct log final {
   log(log&) = delete;
   log(log&&) = delete;
 
- private:
+private:
   template <typename... Args>
   struct LogMessageFormat {
     const std::format_string<Args...> messageFormat;
@@ -80,7 +84,7 @@ struct log final {
     }
   };
 
- public:
+public:
   /**
    * @brief Implementation of the specialized debug log function. It will not log if the logger is nullptr or the minimal
    * log level is not DEBUG.
@@ -159,6 +163,50 @@ struct log final {
     if (logger != nullptr && logger->shouldLog(LogLevel::CRITICAL)) {
       logger->log(LogLevel::CRITICAL, std::format(format.messageFormat, std::forward<Args>(args)...), format.location);
     }
+  }
+};
+
+/**
+ * Contains several loggers instances by name for specific scope.
+ */
+struct Logger final {
+  Logger(const Logger&) = delete;
+  Logger& operator=(const Logger&) = delete;
+
+  /**
+   * Set the logger instance to for a scope.
+   * @param logger The instance of your logger sink.
+   */
+  static void set(std::shared_ptr<Log4LibBase> logger) {
+    if (logger == nullptr) return;
+    std::unique_lock lock(mutex());
+    loggers()[logger->getScope()] = std::move(logger);
+  }
+
+  /**
+   * Provide the scoped logger instance of the name provided if it exists.
+   * @param name The name of the scoped logger instance.
+   * @return The logger instance if it exists; nullptr otherwise.
+   */
+  static std::shared_ptr<Log4LibBase> get(const std::string& name) {
+    std::shared_lock lock(mutex());
+    if (!loggers().contains(name)) return nullptr;
+    return loggers().at(name);
+  }
+
+private:
+  using LoggerMap = std::map<std::string, std::shared_ptr<Log4LibBase>>;
+  Logger() = default;
+  ~Logger() = default;
+
+  static LoggerMap& loggers() {
+    static LoggerMap loggers;
+    return loggers;
+  }
+
+  static std::shared_mutex& mutex() {
+    static std::shared_mutex mutex;
+    return mutex;
   }
 };
 } // namespace lfl::log

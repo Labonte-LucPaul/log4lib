@@ -29,10 +29,10 @@ namespace myclient {
 class Wrapper final : public lfl::Log4LibBase {
 public:
   Wrapper() = default;
-  explicit Wrapper(lfl::LogLevel level) { setMinimalLogLevel(level); }
+  explicit Wrapper(const lfl::LogLevel level) :Log4LibBase("wrapper") { setMinimalLogLevel(level); }
 
 private:
-  void logImpl(lfl::LogLevel level, const std::string_view& message, std::source_location location) override {
+  void logImpl(lfl::LogLevel level, const std::string_view& message, const std::source_location location) override {
     std::clog << "Logging: " << message << " at level " << static_cast<int>(level) << " from " << location.file_name()
       << ":" << location.line() << std::endl;
   }
@@ -69,6 +69,20 @@ private:
     }
   }
 };
+
+
+class ScopeWrapper final : public lfl::Log4LibBase {
+public:
+  ScopeWrapper() = default;
+  explicit ScopeWrapper(const lfl::LogLevel level) :Log4LibBase("ScopeWrapper") { setMinimalLogLevel(level); }
+
+private:
+  void logImpl(lfl::LogLevel level, const std::string_view& message, const std::source_location location) override {
+    std::clog << "Logging: " << message << " at level " << static_cast<int>(level) << " from " << location.file_name()
+      << ":" << location.line() << std::endl;
+  }
+};
+
 } // namespace myclient
 
 int main() {
@@ -77,5 +91,8 @@ int main() {
   mylib::WorkerInLib worker2(std::make_unique<myclient::SyslogWrapper>(lfl::LogLevel::DEBUG));
   worker2.doWork();
 
+  lfl::Logger::set(std::make_shared<myclient::ScopeWrapper>(lfl::LogLevel::DEBUG));
+  mylib::WorkerInLibScope worker3;
+  worker3.doWork();
   return 0;
 }
